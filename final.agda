@@ -312,11 +312,35 @@ const[vec]< S m > x = x ∷ const[vec]< m > x
 --    → sorted xs
 --    → sorted (x ∷ xs)
 
---record group (A : Set) 
+record 𝔾 (elements : Set) : Set where
+  field
+    size : ℕ
+    set : elements 
+    op  : elements → elements → elements
+    ε   : elements
 
-data 𝔾 (id : Set) : ℕ → Set where
-  trivial : 𝔾 id 1
-  _⋅_ : id → 𝔾 id 1 → 𝔾 id 1
+identity : ∀ (s : ℕ) → (op : ℕ → ℕ → ℕ) → ℕ
+identity s op = s
+
+g1 : 𝔾 ℕ
+g1 = record { set = 5 ; op = λ x1 x2 → x1 + x2 ; ε = 0 ; size = 1 }
+
+
+
+order : 𝔾 ℕ → ℕ
+order record { size = size ; set = set ; op = op ; ε = ε } = size
+
+--add : ℕ → ℕ → ℕ
+--add x y = x + y
+
+_ : let g : 𝔾 ℕ
+        g = g1
+    in order g1 ≡ 1
+_ = ↯
+
+--data 𝔾 (id : Set) : ℕ → Set where
+--  trivial : 𝔾 id 1
+--  _⋅_ : id → 𝔾 id 1 → 𝔾 id 1
 
 
 --_id1_ : ∀ {g1 : 𝔾} → (_⋅_ (identity g1) = g1)
@@ -325,12 +349,12 @@ data 𝔾 (id : Set) : ℕ → Set where
 
 --triv : 𝔾 ele (S Z)
 
-data group (size : Set) : ℕ → Set where
-  gen : group size Z
-  _⋅_ : group size Z → group size Z → group size (S Z)
+--data group (size : Set) : ℕ → Set where
+--  gen : group size Z
+--  _⋅_ : group size Z → group size Z → group size (S Z)
 
-id : ∀ {A : Set} → A → A
-id x = x
+--id : ∀ {A : Set} → A → A
+--id x = x
 
 --data vec (A : Set) : ℕ → Set where
 --  [] : vec A Z
