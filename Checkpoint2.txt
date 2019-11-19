@@ -1,0 +1,28 @@
+What was the starting point from last week
+-Could not get libraries working correctly
+
+What was the goal from last week
+-Get the basics library to load correctly and define groups as data types
+
+What was accomplished (i.e., starting point for next week)
+-Groups now have definitions and basic functions have been defined
+
+Who worked on what
+-We both worked together on defining groups and getting the library to connect
+
+What are you stuck on
+-Still having problems with library connectivity on Tyler's machine
+
+What is still left to do
+-Not sure what our next step would be for creating an order function for group elements
+-May need to redefine data types to allow for definitions pertaining to generators
+-Create specifications for proofing Chinese remainder theorem
+
+What is the goal for next week
+-Finalize data types for groups
+-learn more about records in Agda
+-Create a working order function for both elements and groups
+
+What is your fallback plan if you get stuck on something else unexpected
+-Start work on Euclidean algorithm
+-Visit during office hours if further problems arise
