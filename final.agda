@@ -164,8 +164,6 @@ _⧺_ : ∀ {A : Set} → list A → list A → list A
 
 -- functions -- 
 
-id : ∀ {A : Set} → A → A
-id x = x
 
 _∘_ : ∀ {A B C : Set} → (B → C) → (A → B) → (A → C)
 (g ∘ f) x = g (f x)
@@ -314,4 +312,30 @@ const[vec]< S m > x = x ∷ const[vec]< m > x
 --    → sorted xs
 --    → sorted (x ∷ xs)
 
-data 𝔾
+--record group (A : Set) 
+
+data 𝔾 (id : Set) : ℕ → Set where
+  trivial : 𝔾 id 1
+  _⋅_ : id → 𝔾 id 1 → 𝔾 id 1
+
+
+--_id1_ : ∀ {g1 : 𝔾} → (_⋅_ (identity g1) = g1)
+
+--Gen      : 𝔾
+
+--triv : 𝔾 ele (S Z)
+
+data group (size : Set) : ℕ → Set where
+  gen : group size Z
+  _⋅_ : group size Z → group size Z → group size (S Z)
+
+id : ∀ {A : Set} → A → A
+id x = x
+
+--data vec (A : Set) : ℕ → Set where
+--  [] : vec A Z
+--  _∷_ : ∀ {n} → A → vec A n → vec A (S n)
+--
+--vec[_] : ℕ → Set → Set
+--vec[ n ] A = vec A n
+--{-# DISPLAY vec A n = vec[ n ] A #-}
