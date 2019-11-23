@@ -7,12 +7,34 @@ record 𝔾 (element : Set) : Set where
     op  : element → element → element
     ε   : element
 
---improper implementaion of subraction with Nats
 _-_ : ℕ → ℕ → ℕ
 Z - Z = Z
 Z - S y = Z
 S x - Z = S x
 S x - S y = x - y
+
+{-# TERMINATING #-}
+div' : ℕ → ℕ → ℕ → ℕ
+div' Z y a = a
+div' (S x) y a = div' (x - y) y (S a)
+
+_div_ : ℕ → ℕ → ℕ
+_div_ x y with x ≤? y | x ≡? y
+_div_ x y | [≤] | I = 1
+_div_ x y | [≤] | O = 0
+_div_ x y | [>] | H = div' x y 0
+
+_ : 10 div 5 ≡ 2
+_ = ↯
+
+_ : 14 div 4 ≡ 3
+_ = ↯
+
+_ : 0 div 5 ≡ 0
+_ = ↯
+
+_ : 12 div 5 ≡ 2
+_ = ↯
 
 equal : ℕ → ℕ → 𝔹
 equal Z Z = I
@@ -20,13 +42,16 @@ equal Z (S y) = O
 equal (S x) Z = O
 equal (S x) (S y) = equal x y
 
+{-# TERMINATING #-}
 mod : ℕ → ℕ → ℕ
-mod x y with x ∸ y | x ≡? y
-mod x y | Pos pos | I = 0
-mod x y | Pos pos | O = {!!}
-mod x y | NegS neg | l = x
+mod x y with x div y
+mod x y | Z = x
+mod x y | S g = mod (x - y) y 
 
 _ : mod 5 3 ≡ 2
+_ = ↯
+
+_ : mod 14 4 ≡ 2
 _ = ↯
 
 _ : mod 0 5 ≡ 0
@@ -59,24 +84,34 @@ is-nothing : ∀ {a} {A : Set a} → Maybe A → 𝔹
 is-nothing (just x) = O
 is-nothing nothing = I
 
-gcd2 : ℕ → ℕ → ℕ
-gcd2 x y with (mod x y) ≡? 0
-gcd2 x y | I = {!mod 5 3 ≡? 0!}
-gcd2 x y | O with mod x y
-… | H with (mod y (y - H)) ≡? 0
-gcd2 x y | O | H | I = H
-gcd2 x y | O | H | O = H
+
+{-# TERMINATING #-}
+gcd' : ℕ → ℕ → ℕ → ℕ
+gcd' Z y a = a
+gcd' (S x) y a with mod x a ≡? 0 | mod x a ≡? 0
+gcd' (S x) y a | I | I = {!a!}
+gcd' (S x) y a | I | O = {!!}
+gcd' (S x) y a | O | I = {!!}
+gcd' (S x) y a | O | O = {!!}
+
+--gcd' x y a with mod x a ≡? 0 | mod y a ≡? 0
 
 gcd : ℕ → ℕ → ℕ
-gcd x y with x ≤? y
---TODO:
-gcd x y | [≤] = gcd2 y x
-gcd x y | [>] = gcd2 x y
+gcd x y with x ≤? y | x ≡? y
+gcd x y | [≤] | I = Z
+gcd x y | [≤] | O = x
+gcd x y | [>] | H = gcd' x y y
+--gcd' x y y
 
---gcd test
+_ : gcd 5 0 ≡ 0
+_ = ↯
 _ : gcd 5 10 ≡ 5
 _ = ↯
+_ : gcd 21 6 ≡ 3
+_ = ↯
 _ : gcd 5 3 ≡ 1
+_ = ↯
+_ : gcd 6 2 ≡ 1
 _ = ↯
 
 coprime : ℕ → ℕ → 𝔹
