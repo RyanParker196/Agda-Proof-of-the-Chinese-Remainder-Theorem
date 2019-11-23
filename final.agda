@@ -85,24 +85,27 @@ is-nothing (just x) = O
 is-nothing nothing = I
 
 
-{-# TERMINATING #-}
+--{-# TERMINATING #-}
 gcd' : ℕ → ℕ → ℕ → ℕ
-gcd' Z y a = a
-gcd' (S x) y a with mod x a ≡? 0 | mod x a ≡? 0
-gcd' (S x) y a | I | I = {!a!}
-gcd' (S x) y a | I | O = {!!}
-gcd' (S x) y a | O | I = {!!}
-gcd' (S x) y a | O | O = {!!}
+gcd' x y a with mod x a ≡? 0 | mod x a ≡? 0
+gcd' x y a | I | I = a
+gcd' x y Z | I | O = Z
+gcd' x y (S a) | I | O = gcd' x y a
+gcd' x y Z | O | I = Z
+gcd' x y (S a) | O | I = gcd' x y a
+gcd' x y Z | O | O = Z
+gcd' x y (S a) | O | O = gcd' x y a
 
---gcd' x y a with mod x a ≡? 0 | mod y a ≡? 0
 
 gcd : ℕ → ℕ → ℕ
 gcd x y with x ≤? y | x ≡? y
 gcd x y | [≤] | I = Z
 gcd x y | [≤] | O = x
-gcd x y | [>] | H = gcd' x y y
---gcd' x y y
+gcd x Z | [>] | H = 0
+gcd x (S y) | [>] | H = gcd' x (S y) y
 
+_ : gcd 0 5 ≡ 0
+_ = ↯
 _ : gcd 5 0 ≡ 0
 _ = ↯
 _ : gcd 5 10 ≡ 5
