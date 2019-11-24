@@ -13,17 +13,6 @@ Z - S y = Z
 S x - Z = S x
 S x - S y = x - y
 
---div' : ℕ → ℕ → ℕ → ℕ
---div' Z y Z = 1
---div' Z y (S a) = a
---div' (S x) y a = div' ((S x) - y) y (S a)
---
---_div_ : ℕ → ℕ → ℕ
---_div_ x y with x ≤? y | x ≡? y
---_div_ x y | [≤] | I = 1
---_div_ x y | [≤] | O = 0
---_div_ x y | [>] | H = {!div' x y 1!}
-
 {-# TERMINATING #-}
 div' : ℕ → ℕ → ℕ → ℕ
 div' x y a with x ≤? y | x ≡? y
@@ -60,7 +49,7 @@ equal (S x) (S y) = equal x y
 
 mod : ℕ → ℕ → ℕ
 mod x y with x div y
-mod x y | g = {!x - (y × g)!}
+mod x y | g = x - (y × g)
 
 
 _ : mod 5 3 ≡ 2
@@ -114,7 +103,7 @@ gcd' x y (S a) | O | O = gcd' x y a
 gcd : ℕ → ℕ → ℕ
 gcd x y with x ≤? y | x ≡? y
 gcd x y | [≤] | I = x
-gcd x y | [≤] | O = {!gcd' y x x!}
+gcd x y | [≤] | O = gcd' y x x
 gcd x Z | [>] | H = 0
 gcd x (S y) | [>] | H = gcd' x (S y) y
 
@@ -134,8 +123,7 @@ gcd x (S y) | [>] | H = gcd' x (S y) y
 --_ = ↯
 
 coprime : ℕ → ℕ → 𝔹
-coprime x y with gcd x y ≡ 1
-… | H = {!!}
+coprime x y = gcd x y ≡? 1
 
 
 _ : coprime 5 7 ≡ I
