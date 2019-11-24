@@ -13,16 +13,32 @@ Z - S y = Z
 S x - Z = S x
 S x - S y = x - y
 
+--div' : ℕ → ℕ → ℕ → ℕ
+--div' Z y Z = 1
+--div' Z y (S a) = a
+--div' (S x) y a = div' ((S x) - y) y (S a)
+--
+--_div_ : ℕ → ℕ → ℕ
+--_div_ x y with x ≤? y | x ≡? y
+--_div_ x y | [≤] | I = 1
+--_div_ x y | [≤] | O = 0
+--_div_ x y | [>] | H = {!div' x y 1!}
+
 {-# TERMINATING #-}
 div' : ℕ → ℕ → ℕ → ℕ
-div' Z y a = a
-div' (S x) y a = div' (x - y) y (S a)
+div' x y a with x ≤? y | x ≡? y
+div' x y a | [≤] | I = S a
+div' x y a | [≤] | O = a
+div' x y a | [>] | H = div' (x - y) y (S a)
 
 _div_ : ℕ → ℕ → ℕ
-_div_ x y with x ≤? y | x ≡? y
-_div_ x y | [≤] | I = 1
-_div_ x y | [≤] | O = 0
-_div_ x y | [>] | H = div' x y 0
+Z div Z = Z
+Z div S y = Z
+S x div Z = Z
+S x div S y = div' (S x) (S y) 0
+
+_ : 5 div 3 ≡ 1
+_ = ↯
 
 _ : 10 div 5 ≡ 2
 _ = ↯
@@ -42,11 +58,10 @@ equal Z (S y) = O
 equal (S x) Z = O
 equal (S x) (S y) = equal x y
 
-{-# TERMINATING #-}
 mod : ℕ → ℕ → ℕ
 mod x y with x div y
-mod x y | Z = x
-mod x y | S g = mod (x - y) y 
+mod x y | g = {!x - (y × g)!}
+
 
 _ : mod 5 3 ≡ 2
 _ = ↯
@@ -85,7 +100,6 @@ is-nothing (just x) = O
 is-nothing nothing = I
 
 
---{-# TERMINATING #-}
 gcd' : ℕ → ℕ → ℕ → ℕ
 gcd' x y a with mod x a ≡? 0 | mod x a ≡? 0
 gcd' x y a | I | I = a
@@ -99,26 +113,37 @@ gcd' x y (S a) | O | O = gcd' x y a
 
 gcd : ℕ → ℕ → ℕ
 gcd x y with x ≤? y | x ≡? y
-gcd x y | [≤] | I = Z
-gcd x y | [≤] | O = x
+gcd x y | [≤] | I = x
+gcd x y | [≤] | O = {!gcd' y x x!}
 gcd x Z | [>] | H = 0
 gcd x (S y) | [>] | H = gcd' x (S y) y
 
-_ : gcd 0 5 ≡ 0
-_ = ↯
-_ : gcd 5 0 ≡ 0
-_ = ↯
-_ : gcd 5 10 ≡ 5
-_ = ↯
-_ : gcd 21 6 ≡ 3
-_ = ↯
-_ : gcd 5 3 ≡ 1
-_ = ↯
-_ : gcd 6 2 ≡ 1
-_ = ↯
+--_ : gcd 5 7 ≡ 1
+--_ = ↯
+--_ : gcd 0 5 ≡ 0
+--_ = ↯
+--_ : gcd 5 0 ≡ 0
+--_ = ↯
+--_ : gcd 5 10 ≡ 5
+--_ = ↯
+--_ : gcd 21 6 ≡ 3
+--_ = ↯
+--_ : gcd 5 3 ≡ 1
+--_ = ↯
+--_ : gcd 6 2 ≡ 1
+--_ = ↯
 
 coprime : ℕ → ℕ → 𝔹
-coprime x y = {!!}
+coprime x y with gcd x y ≡ 1
+… | H = {!!}
+
+
+_ : coprime 5 7 ≡ I
+_ = ↯
+_ : coprime 6 3 ≡ O
+_ = ↯
+_ : coprime 12 4 ≡ O
+_ = ↯
 {-
 17 ∈ ℤ₃₅ → (2,3) ∈ ℤ₅ × ℤ₇
 -}
