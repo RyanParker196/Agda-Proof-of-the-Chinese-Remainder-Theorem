@@ -138,13 +138,33 @@ _ = ↯
 neg : ℕ → ℕ
 neg x = {!!}
 
-factorial : ℕ → ℕ
-factorial x = {!!}
+_! : ℕ → ℕ
+_! Z = 1
+_! (S x) = (S x) × (x !)
 
+_ : 3 ! ≡ 6
+_ = ↯
+
+--Wrote this using wilsons theorem
 prime : ℕ → 𝔹
-prime x = {!!}
+prime x = (mod ((x - 1) !) x) ≡? (x - 1) 
 
-wilsonsTHM : ∀ {n : ℕ} → 2 ≤ n → mod (factorial (n - 1)) n ≡ (neg 1) → prime n ≡ I
+_ : prime 7 ≡ I
+_ = ↯
+_ : prime 4 ≡ O
+_ = ↯
+_ : prime 3 ≡ I
+_ = ↯
+_ : prime 5 ≡ I
+_ = ↯
+
+_ : gcd 5 5 ≡ 5
+_ = ↯
+
+_ : prime 5 ≡ I
+_ = ↯
+
+wilsonsTHM : ∀ {n : ℕ} → 2 ≤ n → mod ((n - 1) !) n ≡ n - 1 → prime n ≡ I
 wilsonsTHM = {!!}
 
 --tests
