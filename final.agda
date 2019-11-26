@@ -135,9 +135,6 @@ _ = ↯
 17 ∈ ℤ₃₅ → (2,3) ∈ ℤ₅ × ℤ₇
 -}
 
-neg : ℕ → ℕ
-neg x = {!!}
-
 _! : ℕ → ℕ
 _! Z = 1
 _! (S x) = (S x) × (x !)
@@ -157,6 +154,10 @@ _ : prime 3 ≡ I
 _ = ↯
 _ : prime 5 ≡ I
 _ = ↯
+_ : prime 0 ≡ O
+_ = ↯
+_ : prime 1 ≡ I
+_ = ↯
 
 _ : gcd 5 5 ≡ 5
 _ = ↯
@@ -165,7 +166,7 @@ _ : prime 5 ≡ I
 _ = ↯
 
 wilsonsTHM : ∀ {n : ℕ} → 2 ≤ n → mod ((n - 1) !) n ≡ n - 1 → prime n ≡ I
-wilsonsTHM = {!!}
+wilsonsTHM n>1 test = {!!}
 
 --tests
 _ : order g1 ≡ 1
