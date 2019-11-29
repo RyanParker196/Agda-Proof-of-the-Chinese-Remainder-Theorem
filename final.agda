@@ -165,8 +165,9 @@ _ = ↯
 _ : prime 5 ≡ I
 _ = ↯
 
-wilsonsTHM : ∀ {n : ℕ} → 2 ≤ n → mod ((n - 1) !) n ≡ n - 1 → prime n ≡ I
-wilsonsTHM n>1 test = {!!}
+wilsonsTHM : ∀ {n : ℕ} → 1 < n → mod ((n - 1) !) n ≡ n - 1 → prime n ≡ I
+wilsonsTHM {Z} () test
+wilsonsTHM {S n} (S n>1) test = {!!}
 
 --tests
 _ : order g1 ≡ 1
