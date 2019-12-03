@@ -164,10 +164,6 @@ _ : prime 0 ≡ O
 _ = ↯
 _ : prime 1 ≡ O
 _ = ↯
-
-_ : gcd 5 5 ≡ 5
-_ = ↯
-
 _ : prime 5 ≡ I
 _ = ↯
 
@@ -182,7 +178,8 @@ postulate
 -- _ = ↯
 
 prods : ∀ {n} (xs : vec[ n ] ℕ) → ℕ
-prods = {!!}
+prods [] = 0
+prods (x ∷ xs) = x × prods xs
 
 CRT :
   ∀ k
@@ -199,6 +196,5 @@ CRT :
   -- x ≡ a (mod m₁m₂…ₖ)
   → ∃ a′ ⦂ ℕ ST
     mod x (prods m) ≡ mod a′ (prods m)
-CRT Z a m x sumP copP = {!!}
-CRT (S k) a m x sumP copP = {!!}
+CRT k a m x sumP copP = {!!}
     
