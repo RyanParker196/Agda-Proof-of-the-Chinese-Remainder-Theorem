@@ -8,6 +8,8 @@ record 𝔾 (element : Set) : Set where
     ε   : element
 
 --improper implementaion of subraction with Nats
+-- write down type of alg fixed to natural numbers
+-- do CTR just for nats then resume general group stuff
 _-_ : ℕ → ℕ → ℕ
 Z - Z = Z
 Z - S y = Z
@@ -19,9 +21,9 @@ equal Z Z = I
 equal Z (S y) = O
 equal (S x) Z = O
 equal (S x) (S y) = equal x y
-
+-- use ≡? bunch of lemmas
 mod : ℕ → ℕ → ℕ
-mod x y with x ∸ y | equal x y
+mod x y with x ∸ y |  x ≡? y
 mod x y | Pos pos | I = 0
 mod x y | Pos pos | O = y - (x × pos)
 mod x y | NegS neg | l = x
