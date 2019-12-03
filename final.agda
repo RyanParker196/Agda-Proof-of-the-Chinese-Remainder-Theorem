@@ -144,7 +144,10 @@ _ = ↯
 
 --Wrote this using wilsons theorem
 prime : ℕ → 𝔹
-prime x = (mod ((x - 1) !) x) ≡? (x - 1) 
+prime Z = O
+prime (S Z) = O
+prime (S (S x)) = let x = S (S x) in (mod ((x - 1) !) x) ≡? (x - 1)
+--(mod ((x - 1) !) x) ≡? (x - 1) 
 
 _ : prime 7 ≡ I
 _ = ↯
@@ -156,7 +159,7 @@ _ : prime 5 ≡ I
 _ = ↯
 _ : prime 0 ≡ O
 _ = ↯
-_ : prime 1 ≡ I
+_ : prime 1 ≡ O
 _ = ↯
 
 _ : gcd 5 5 ≡ 5
@@ -166,9 +169,17 @@ _ : prime 5 ≡ I
 _ = ↯
 
 
-wilsonsTHM : ∀ {n : ℕ} → 1 < n → mod ((n - 1) !) n ≡ n - 1 → prime n ≡ I
-wilsonsTHM {Z} () test
-wilsonsTHM {S n} (S n>1) test = {!!}
+wilsonsTHM : ∀ (n : ℕ) → (mod ((n - 1) !) n) ≡ (n - 1) → prime n ≡ I
+wilsonsTHM Z ()
+wilsonsTHM (S Z) ↯ = {!!}
+wilsonsTHM (S (S Z)) ↯ = {!!}
+wilsonsTHM (S (S (S n))) m = {!!}
+
+--wilsonsTHM : ∀ (n : ℕ) → prime n ≡ I → (mod ((n - 1) !) n) ≡ (n - 1)
+--wilsonsTHM Z ()
+--wilsonsTHM (S Z) p = ↯
+--wilsonsTHM (S (S n)) p = {!!}
+
 
 --tests
 _ : order g1 ≡ 1
