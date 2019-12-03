@@ -7,6 +7,8 @@ record 𝔾 (element : Set) : Set where
     op  : element → element → element
     ε   : element
 
+
+
 _-_ : ℕ → ℕ → ℕ
 Z - Z = Z
 Z - S y = Z
@@ -46,8 +48,10 @@ equal Z Z = I
 equal Z (S y) = O
 equal (S x) Z = O
 equal (S x) (S y) = equal x y
-
+-- use ≡? bunch of lemmas
 mod : ℕ → ℕ → ℕ
+
+
 mod x y with x div y
 mod x y | g = x - (y × g)
 
@@ -79,7 +83,7 @@ order record { size = size ; op = op ; ε = ε } = size
 data Maybe {a} (A : Set a) : Set a where
   just    : (x : A) → Maybe A
   nothing : Maybe A
-  
+
 is-just : ∀ {a} {A : Set a} → Maybe A → 𝔹
 is-just (just _) = I
 is-just nothing  = O
@@ -146,8 +150,7 @@ _ = ↯
 prime : ℕ → 𝔹
 prime Z = O
 prime (S Z) = O
-prime (S (S x)) = let x = S (S x) in (mod ((x - 1) !) x) ≡? (x - 1)
---(mod ((x - 1) !) x) ≡? (x - 1) 
+prime (S (S x)) = let x = S (S x) in (mod ((x - 1) !) x) ≡? ((x - 1))
 
 _ : prime 7 ≡ I
 _ = ↯
@@ -169,18 +172,33 @@ _ : prime 5 ≡ I
 _ = ↯
 
 
-wilsonsTHM : ∀ (n : ℕ) → (mod ((n - 1) !) n) ≡ (n - 1) → prime n ≡ I
-wilsonsTHM Z ()
-wilsonsTHM (S Z) ↯ = {!!}
-wilsonsTHM (S (S Z)) ↯ = {!!}
-wilsonsTHM (S (S (S n))) m = {!!}
 
---wilsonsTHM : ∀ (n : ℕ) → prime n ≡ I → (mod ((n - 1) !) n) ≡ (n - 1)
---wilsonsTHM Z ()
---wilsonsTHM (S Z) p = ↯
---wilsonsTHM (S (S n)) p = {!!}
+postulate
+  wilsonsTHM : ∀ (n : ℕ) → prime n ≡ I → mod ((n - 1) ! ) n  ≡ (n - 1)
 
+-- wilsonsTHM n p = {!   !}
+-- --tests
+-- _ : order g1 ≡ 1
+-- _ = ↯
 
---tests
-_ : order g1 ≡ 1
-_ = ↯
+prods : ∀ {n} (xs : vec[ n ] ℕ) → ℕ
+prods = {!!}
+
+CRT :
+  ∀ k
+    (a : vec[ k ] ℕ)
+    (m : vec[ k ] ℕ)
+    (x : ℕ)
+  -- x is the sum assumption
+  -- x ≡ aᵢ (mod mᵢ)
+  → (∀ (i : idx k) → mod x (m #[ i ]) ≡ mod (a #[ i ]) (m #[ i ]))
+  -- coprime assumption
+  -- i ≠ j
+  → (∀ (i j : idx k) → ¬ (i ≡ j) → coprime (m #[ i ]) (m #[ i ]) ≡ I)
+  -- a′ is the unique solution
+  -- x ≡ a (mod m₁m₂…ₖ)
+  → ∃ a′ ⦂ ℕ ST
+    mod x (prods m) ≡ mod a′ (prods m)
+CRT Z a m x sumP copP = {!!}
+CRT (S k) a m x sumP copP = {!!}
+    
