@@ -7,12 +7,8 @@ record 𝔾 (element : Set) : Set where
     op  : element → element → element
     ε   : element
 
-<<<<<<< HEAD
---improper implementaion of subraction with Nats
--- write down type of alg fixed to natural numbers
--- do CTR just for nats then resume general group stuff
-=======
->>>>>>> 1f0328be7a53aa9d79eb48dbcf58e16f6f18cf6f
+
+
 _-_ : ℕ → ℕ → ℕ
 Z - Z = Z
 Z - S y = Z
@@ -54,16 +50,11 @@ equal (S x) Z = O
 equal (S x) (S y) = equal x y
 -- use ≡? bunch of lemmas
 mod : ℕ → ℕ → ℕ
-<<<<<<< HEAD
-mod x y with x ∸ y |  x ≡? y
-mod x y | Pos pos | I = 0
-mod x y | Pos pos | O = y - (x × pos)
-mod x y | NegS neg | l = x
-=======
+
+
 mod x y with x div y
 mod x y | g = x - (y × g)
 
->>>>>>> 1f0328be7a53aa9d79eb48dbcf58e16f6f18cf6f
 
 _ : mod 5 3 ≡ 2
 _ = ↯
@@ -92,7 +83,7 @@ order record { size = size ; op = op ; ε = ε } = size
 data Maybe {a} (A : Set a) : Set a where
   just    : (x : A) → Maybe A
   nothing : Maybe A
-  
+
 is-just : ∀ {a} {A : Set a} → Maybe A → 𝔹
 is-just (just _) = I
 is-just nothing  = O
@@ -157,7 +148,9 @@ _ = ↯
 
 --Wrote this using wilsons theorem
 prime : ℕ → 𝔹
-prime x = (mod ((x - 1) !) x) ≡? (x - 1) 
+prime Z = O
+prime (S Z) = O
+prime (S (S x)) = let x = S (S x) in (mod ((x - 1) !) x) ≡? ((x - 1))
 
 _ : prime 7 ≡ I
 _ = ↯
@@ -169,7 +162,7 @@ _ : prime 5 ≡ I
 _ = ↯
 _ : prime 0 ≡ O
 _ = ↯
-_ : prime 1 ≡ I
+_ : prime 1 ≡ O
 _ = ↯
 
 _ : gcd 5 5 ≡ 5
@@ -179,10 +172,10 @@ _ : prime 5 ≡ I
 _ = ↯
 
 
-wilsonsTHM : ∀ {n : ℕ} → 1 < n → mod ((n - 1) !) n ≡ n - 1 → prime n ≡ I
-wilsonsTHM {Z} () test
-wilsonsTHM {S n} (S n>1) test = {!!}
 
+
+wilsonsTHM : ∀ (n : ℕ) → prime n ≡ I → mod ((n - 1) ! ) n  ≡ (n - 1)
+wilsonsTHM n p = {!   !}
 --tests
 _ : order g1 ≡ 1
 _ = ↯
