@@ -185,21 +185,28 @@ postulate
 prods : ∀ {n} (xs : vec[ n ] ℕ) → ℕ
 prods = {!!}
 
-CRT :
+base-case : (a : ℕ) (m : ℕ) → (i : idx 1) → mod a ([ m ] #[ i ]) ≡ mod ([ a ] #[ i ]) ([ m ] #[ i ])
+base-case a m Z = ↯
+base-case a m (S ())
+
+L1 : ∀ (k : ℕ) (ms : vec[ S k ] ℕ) → {- 0 < S (S k) → -} (i j : idx (S k)) → ¬ i ≡ j → coprime (ms #[ i ]) (ms #[ i ]) ≡ I
+L1 k ms {- ltP -} = {!!}
+
+
+CRT-1 :
   ∀ k
     (a : vec[ k ] ℕ)
     (m : vec[ k ] ℕ)
-    (x : ℕ)
-  -- x is the sum assumption
-  -- x ≡ aᵢ (mod mᵢ)
-  → (∀ (i : idx k) → mod x (m #[ i ]) ≡ mod (a #[ i ]) (m #[ i ]))
+  -- k > 1
+  → 0 < k
   -- coprime assumption
-  -- i ≠ j
+  -- i ≠ j ⇒ (mᵢ,mⱼ) = 1
   → (∀ (i j : idx k) → ¬ (i ≡ j) → coprime (m #[ i ]) (m #[ i ]) ≡ I)
-  -- a′ is the unique solution
-  -- x ≡ a (mod m₁m₂…ₖ)
-  → ∃ a′ ⦂ ℕ ST
-    mod x (prods m) ≡ mod a′ (prods m)
-CRT Z a m x sumP copP = {!!}
-CRT (S k) a m x sumP copP = {!!}
-    
+  -- x is the solution to the system of congruences
+  → ∃ x ⦂ ℕ ST
+  -- x ≡ aᵢ (mod mᵢ)
+    (∀ (i : idx k) → mod x (m #[ i ]) ≡ mod (a #[ i ]) (m #[ i ]))
+CRT-1 0 a m () copP
+CRT-1 1 [ a ] [ m ] ltP copP = ⟨∃ a , base-case a m ⟩
+CRT-1 (S (S k)) (a ∷ as) (m ∷ ms) ltP copP with CRT-1 (S k) as ms Z (L1 k ms {- ltP -})
+… | ⟨∃ x , cong ⟩ = ⟨∃ {!!} , {!!} ⟩
