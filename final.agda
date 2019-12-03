@@ -174,8 +174,32 @@ _ = ↯
 
 
 
-wilsonsTHM : ∀ (n : ℕ) → prime n ≡ I → mod ((n - 1) ! ) n  ≡ (n - 1)
-wilsonsTHM n p = {!   !}
---tests
-_ : order g1 ≡ 1
-_ = ↯
+postulate
+  wilsonsTHM : ∀ (n : ℕ) → prime n ≡ I → mod ((n - 1) ! ) n  ≡ (n - 1)
+
+-- wilsonsTHM n p = {!   !}
+-- --tests
+-- _ : order g1 ≡ 1
+-- _ = ↯
+
+prods : ∀ {n} (xs : vec[ n ] ℕ) → ℕ
+prods = {!!}
+
+CRT :
+  ∀ k
+    (a : vec[ k ] ℕ)
+    (m : vec[ k ] ℕ)
+    (x : ℕ)
+  -- x is the sum assumption
+  -- x ≡ aᵢ (mod mᵢ)
+  → (∀ (i : idx k) → mod x (m #[ i ]) ≡ mod (a #[ i ]) (m #[ i ]))
+  -- coprime assumption
+  -- i ≠ j
+  → (∀ (i j : idx k) → ¬ (i ≡ j) → coprime (m #[ i ]) (m #[ i ]) ≡ I)
+  -- a′ is the unique solution
+  -- x ≡ a (mod m₁m₂…ₖ)
+  → ∃ a′ ⦂ ℕ ST
+    mod x (prods m) ≡ mod a′ (prods m)
+CRT Z a m x sumP copP = {!!}
+CRT (S k) a m x sumP copP = {!!}
+    
