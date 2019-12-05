@@ -7,8 +7,6 @@ record 𝔾 (element : Set) : Set where
     op  : element → element → element
     ε   : element
 
-
-
 _-_ : ℕ → ℕ → ℕ
 Z - Z = Z
 Z - S y = Z
@@ -129,6 +127,8 @@ _ = ↯
 coprime : ℕ → ℕ → 𝔹
 coprime x y = gcd x y ≡? 1
 
+_ : coprime 5 5 ≡ O
+_ = ↯
 _ : coprime 5 7 ≡ I
 _ = ↯
 _ : coprime 6 3 ≡ O
@@ -185,9 +185,28 @@ base-case : (a : ℕ) (m : ℕ) → (i : idx 1) → mod a ([ m ] #[ i ]) ≡ mod
 base-case a m Z = ↯
 base-case a m (S ())
 
-L1 : ∀ (k : ℕ) (ms : vec[ S k ] ℕ) → {- 0 < S (S k) → -} (i j : idx (S k)) → ¬ i ≡ j → coprime (ms #[ i ]) (ms #[ i ]) ≡ I
-L1 k ms {- ltP -} = {!!}
+vec-ele : {n : ℕ} (ms : vec[ n ] ℕ) → ℕ → ℕ → Maybe ℕ
+vec-ele [] i c = nothing
+vec-ele (m ∷ ms) i c with c ≡? i
+vec-ele (m ∷ ms) i c | I = just m
+vec-ele (m ∷ ms) i c | O = vec-ele ms i (S c)
 
+
+L1 : ∀ (k : ℕ) (ms : vec[ S k ] ℕ) → {- 0 < S (S k) → -} (i j : idx (S k)) → ¬ i ≡ j → coprime (ms #[ i ]) (ms #[ j ]) ≡ I
+L1 k ms i j ltp with vec-ele ms (S k) 0
+L1 k ms i j ltp | just x = {!!}
+L1 k ms i j ltp | nothing = {!nothing!}
+
+postulate
+  BezID : ∀ (m1 m2 : ℕ) → coprime m1 m2 ≡ I → vec[ 2 ] ℕ
+  helper : ∀ {m1 m2 k : ℕ} {ms : vec[ k ] ℕ} (i j : idx (S (S k)))
+    → ¬ i ≡ j
+    → coprime ((m1 ∷ m2 ∷ ms) #[ i ]) ((m1 ∷ m2 ∷ ms) #[ j ]) ≡ I
+    → ∃ m1 ⦂ ℕ ST ∃ m2 ⦂ ℕ ST coprime m1 m2 ≡ I
+
+algo : ℕ → ℕ → (m1 : ℕ) → (m2 : ℕ) → coprime m1 m2 ≡ I → ℕ
+algo a1 a2 m1 m2 copP with BezID m1 m2 copP
+algo a1 a2 m1 m2 copP | [ n₁ , n₂ ] = (a1 × m2 × n₂) + (a2 × m1 × n₁)
 
 CRT-1 :
   ∀ k
@@ -197,12 +216,27 @@ CRT-1 :
   → 0 < k
   -- coprime assumption
   -- i ≠ j ⇒ (mᵢ,mⱼ) = 1
-  → (∀ (i j : idx k) → ¬ (i ≡ j) → coprime (m #[ i ]) (m #[ i ]) ≡ I)
+  → (∀ (i j : idx k) → ¬ (i ≡ j) → coprime (m #[ i ]) (m #[ j ]) ≡ I)
   -- x is the solution to the system of congruences
   → ∃ x ⦂ ℕ ST
   -- x ≡ aᵢ (mod mᵢ)
     (∀ (i : idx k) → mod x (m #[ i ]) ≡ mod (a #[ i ]) (m #[ i ]))
 CRT-1 0 a m () copP
 CRT-1 1 [ a ] [ m ] ltP copP = ⟨∃ a , base-case a m ⟩
-CRT-1 (S (S k)) (a ∷ as) (m ∷ ms) ltP copP with CRT-1 (S k) as ms Z (L1 k ms {- ltP -})
-… | ⟨∃ x , cong ⟩ = ⟨∃ {!!} , {!!} ⟩
+CRT-1 (S (S k)) (a1 ∷ a2 ∷ as) (m1 ∷ m2 ∷ ms) ltP copP with CRT-1 (S k) (algo a1 a2 m1 m2 {!!} ∷ as) (m1 × m2 ∷ ms) Z {!helper!}
+CRT-1 (S (S k)) (a1 ∷ a2 ∷ as) (m1 ∷ m2 ∷ ms) ltP copP | ⟨∃ x , x₁ ⟩ = ⟨∃ x , {!!} ⟩
+--CRT-1 :
+--  ∀ k
+--    (a : vec[ k ] ℕ)
+--    (m : vec[ k ] ℕ)
+--  → 1 < k
+--  → ∀ (i j : idx k)
+--  → ¬ (i ≡ j)
+--  → coprime (m #[ i ]) (m #[ j ]) ≡ I
+--  → ∃ x ⦂ ℕ ST
+--  -- x ≡ aᵢ (mod mᵢ)
+--    (∀ (i : idx k) → mod x (m #[ i ]) ≡ mod (a #[ i ]) (m #[ i ]))
+--CRT-1 0 as ms () i j noteq coP
+--CRT-1 1 as ms (S ()) i j noteq coP
+--CRT-1 2 [ a1 , a2 ] [ m1 , m2 ] gt1 i j noteq coP = ⟨∃ {!!} , (λ i₁ → {!!}) ⟩
+--CRT-1 (S (S (S k))) as ms gt1 i j noteq coP = {!!}
