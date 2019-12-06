@@ -46,10 +46,9 @@ equal Z Z = I
 equal Z (S y) = O
 equal (S x) Z = O
 equal (S x) (S y) = equal x y
--- use ≡? bunch of lemmas
+
+
 mod : ℕ → ℕ → ℕ
-
-
 mod x y with x div y
 mod x y | g = x - (y × g)
 
@@ -68,27 +67,6 @@ _ = ↯
 
 _ : mod 2 5 ≡ 2
 _ = ↯
-
---Constructs group with: element   =  1
---                       operation = {+}
-g1 : 𝔾 ℕ
-g1 = record { op = λ x1 x2 → x1 + x2 ; ε = 0 ; size = 1 }
-
---funtion to return order of a group
-order : 𝔾 ℕ → ℕ
-order record { size = size ; op = op ; ε = ε } = size
-
-data Maybe {a} (A : Set a) : Set a where
-  just    : (x : A) → Maybe A
-  nothing : Maybe A
-
-is-just : ∀ {a} {A : Set a} → Maybe A → 𝔹
-is-just (just _) = I
-is-just nothing  = O
-
-is-nothing : ∀ {a} {A : Set a} → Maybe A → 𝔹
-is-nothing (just x) = O
-is-nothing nothing = I
 
 
 gcd' : ℕ → ℕ → ℕ → ℕ
@@ -178,24 +156,21 @@ postulate
 -- _ = ↯
 
 prods : ∀ {n} (xs : vec[ n ] ℕ) → ℕ
-prods [] = 0
-prods (x ∷ xs) = x × prods xs
+prods [] = 1
+prods [ x ] = x
+prods (x₁ ∷ x₂ ∷ xs) = x₁ × x₂ × prods xs
+
+_ : let xs = [ 3 , 2 ] in prods xs ≡ 6 
+_ = ↯
 
 base-case : (a : ℕ) (m : ℕ) → (i : idx 1) → mod a ([ m ] #[ i ]) ≡ mod ([ a ] #[ i ]) ([ m ] #[ i ])
 base-case a m Z = ↯
 base-case a m (S ())
 
-vec-ele : {n : ℕ} (ms : vec[ n ] ℕ) → ℕ → ℕ → Maybe ℕ
-vec-ele [] i c = nothing
-vec-ele (m ∷ ms) i c with c ≡? i
-vec-ele (m ∷ ms) i c | I = just m
-vec-ele (m ∷ ms) i c | O = vec-ele ms i (S c)
-
-
-L1 : ∀ (k : ℕ) (ms : vec[ S k ] ℕ) → {- 0 < S (S k) → -} (i j : idx (S k)) → ¬ i ≡ j → coprime (ms #[ i ]) (ms #[ j ]) ≡ I
-L1 k ms i j ltp with vec-ele ms (S k) 0
-L1 k ms i j ltp | just x = {!!}
-L1 k ms i j ltp | nothing = {!nothing!}
+help : ∀ {k : ℕ} (i : idx k) → idx (S k)
+help {Z} ()
+help {S k} i with idx (k)
+… | H = S i
 
 postulate
   BezID : ∀ (m1 m2 : ℕ) → coprime m1 m2 ≡ I → vec[ 2 ] ℕ
@@ -203,10 +178,16 @@ postulate
     → ¬ i ≡ j
     → coprime ((m1 ∷ m2 ∷ ms) #[ i ]) ((m1 ∷ m2 ∷ ms) #[ j ]) ≡ I
     → ∃ m1 ⦂ ℕ ST ∃ m2 ⦂ ℕ ST coprime m1 m2 ≡ I
-
+  triv : Z ≡? S Z ≡ I → 𝟘
+  fake : O ≡ I
+  Lemma : ∀ {k : ℕ} (i j : idx k) → (¬ i ≡ j) → ¬ help i ≡ help j
+  
 algo : ℕ → ℕ → (m1 : ℕ) → (m2 : ℕ) → coprime m1 m2 ≡ I → ℕ
 algo a1 a2 m1 m2 copP with BezID m1 m2 copP
 algo a1 a2 m1 m2 copP | [ n₁ , n₂ ] = (a1 × m2 × n₂) + (a2 × m1 × n₁)
+
+
+
 
 CRT-1 :
   ∀ k
@@ -223,20 +204,7 @@ CRT-1 :
     (∀ (i : idx k) → mod x (m #[ i ]) ≡ mod (a #[ i ]) (m #[ i ]))
 CRT-1 0 a m () copP
 CRT-1 1 [ a ] [ m ] ltP copP = ⟨∃ a , base-case a m ⟩
-CRT-1 (S (S k)) (a1 ∷ a2 ∷ as) (m1 ∷ m2 ∷ ms) ltP copP with CRT-1 (S k) (algo a1 a2 m1 m2 {!!} ∷ as) (m1 × m2 ∷ ms) Z {!helper!}
-CRT-1 (S (S k)) (a1 ∷ a2 ∷ as) (m1 ∷ m2 ∷ ms) ltP copP | ⟨∃ x , x₁ ⟩ = ⟨∃ x , {!!} ⟩
---CRT-1 :
---  ∀ k
---    (a : vec[ k ] ℕ)
---    (m : vec[ k ] ℕ)
---  → 1 < k
---  → ∀ (i j : idx k)
---  → ¬ (i ≡ j)
---  → coprime (m #[ i ]) (m #[ j ]) ≡ I
---  → ∃ x ⦂ ℕ ST
---  -- x ≡ aᵢ (mod mᵢ)
---    (∀ (i : idx k) → mod x (m #[ i ]) ≡ mod (a #[ i ]) (m #[ i ]))
---CRT-1 0 as ms () i j noteq coP
---CRT-1 1 as ms (S ()) i j noteq coP
---CRT-1 2 [ a1 , a2 ] [ m1 , m2 ] gt1 i j noteq coP = ⟨∃ {!!} , (λ i₁ → {!!}) ⟩
---CRT-1 (S (S (S k))) as ms gt1 i j noteq coP = {!!}
+CRT-1 (S (S k)) (a1 ∷ a2 ∷ as) (m1 ∷ m2 ∷ ms) ltP copP
+  with CRT-1 (S k) (algo a1 a2 m1 m2 (copP Z (S Z) λ x → triv fake) ∷ as) (m1 × m2 ∷ ms) Z λ i j x → copP ({!help i!}) ({!!}) ({!!})
+CRT-1 (S (S k)) (a1 ∷ a2 ∷ as) (m1 ∷ m2 ∷ ms) ltP copP | ⟨∃ x , cong ⟩ = ⟨∃ x , (λ i → {!!}) ⟩
+
