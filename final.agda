@@ -146,7 +146,6 @@ _ : prime 5 ≡ I
 _ = ↯
 
 
-
 postulate
   wilsonsTHM : ∀ (n : ℕ) → prime n ≡ I → mod ((n - 1) ! ) n  ≡ (n - 1)
 
@@ -163,7 +162,7 @@ prods (x₁ ∷ x₂ ∷ xs) = x₁ × x₂ × prods xs
 _ : let xs = [ 3 , 2 ] in prods xs ≡ 6 
 _ = ↯
 
-base-case : (a : ℕ) (m : ℕ) → (i : idx 1) → mod a ([ m ] #[ i ]) ≡ mod ([ a ] #[ i ]) ([ m ] #[ i ])
+base-case : (a : ℕ) (m : ℕ) → (i : idx 1) → mod a (prods [ m ]) ≡ mod ([ a ] #[ i ]) (prods [ m ])
 base-case a m Z = ↯
 base-case a m (S ())
 
@@ -179,15 +178,13 @@ postulate
     → coprime ((m1 ∷ m2 ∷ ms) #[ i ]) ((m1 ∷ m2 ∷ ms) #[ j ]) ≡ I
     → ∃ m1 ⦂ ℕ ST ∃ m2 ⦂ ℕ ST coprime m1 m2 ≡ I
   triv : Z ≡? S Z ≡ I → 𝟘
-  fake : O ≡ I
+  -- fake : O ≡ I
+  good-lemma : ∀ (n : ℕ) → (Z AT idx (S (S n))) ≡ S Z → 𝟘
   Lemma : ∀ {k : ℕ} (i j : idx k) → (¬ i ≡ j) → ¬ help i ≡ help j
   
 algo : ℕ → ℕ → (m1 : ℕ) → (m2 : ℕ) → coprime m1 m2 ≡ I → ℕ
 algo a1 a2 m1 m2 copP with BezID m1 m2 copP
 algo a1 a2 m1 m2 copP | [ n₁ , n₂ ] = (a1 × m2 × n₂) + (a2 × m1 × n₁)
-
-
-
 
 CRT-1 :
   ∀ k
@@ -201,10 +198,10 @@ CRT-1 :
   -- x is the solution to the system of congruences
   → ∃ x ⦂ ℕ ST
   -- x ≡ aᵢ (mod mᵢ)
-    (∀ (i : idx k) → mod x (m #[ i ]) ≡ mod (a #[ i ]) (m #[ i ]))
+    (∀ (i : idx k) → mod x (prods m) ≡ mod (a #[ i ]) (prods m))
 CRT-1 0 a m () copP
-CRT-1 1 [ a ] [ m ] ltP copP = ⟨∃ a , base-case a m ⟩
+CRT-1 1 [ a ] [ m ] ltP copP = ⟨∃ a , (base-case a m) ⟩
 CRT-1 (S (S k)) (a1 ∷ a2 ∷ as) (m1 ∷ m2 ∷ ms) ltP copP
-  with CRT-1 (S k) (algo a1 a2 m1 m2 (copP Z (S Z) λ x → triv fake) ∷ as) (m1 × m2 ∷ ms) Z λ i j x → copP ({!help i!}) ({!!}) ({!!})
+  with CRT-1 (S k) (algo a1 a2 m1 m2 (copP Z (S Z) (λ ())) ∷ as) (m1 × m2 ∷ ms) Z λ i j x → copP ({! i!}) ({!!}) ({!!})
 CRT-1 (S (S k)) (a1 ∷ a2 ∷ as) (m1 ∷ m2 ∷ ms) ltP copP | ⟨∃ x , cong ⟩ = ⟨∃ x , (λ i → {!!}) ⟩
 
