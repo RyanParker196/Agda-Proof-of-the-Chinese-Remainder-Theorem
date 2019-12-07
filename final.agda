@@ -202,6 +202,6 @@ CRT-1 :
 CRT-1 0 a m () copP
 CRT-1 1 [ a ] [ m ] ltP copP = ⟨∃ a , (base-case a m) ⟩
 CRT-1 (S (S k)) (a1 ∷ a2 ∷ as) (m1 ∷ m2 ∷ ms) ltP copP
-  with CRT-1 (S k) (algo a1 a2 m1 m2 (copP Z (S Z) (λ ())) ∷ as) (m1 × m2 ∷ ms) Z λ i j x → copP ({! i!}) ({!!}) ({!!})
+  with CRT-1 (S k) (algo a1 a2 m1 m2 (copP Z (S Z) (λ ())) ∷ as) (m1 × m2 ∷ ms) Z λ i j x → copP ({!Z!}) ({!!}) ({!!})
 CRT-1 (S (S k)) (a1 ∷ a2 ∷ as) (m1 ∷ m2 ∷ ms) ltP copP | ⟨∃ x , cong ⟩ = ⟨∃ x , (λ i → {!!}) ⟩
 
