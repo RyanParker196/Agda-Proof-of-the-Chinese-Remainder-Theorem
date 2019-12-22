@@ -214,6 +214,6 @@ postulate
 commut : {m1 m2 : ℕ} (ms : vec[ 2 ] ℕ) → m1 × m2 × prods ms ≡ prods (m1 × m2 ∷ ms)
 commut {m1} {m2} [ Z , Z ] with mult-zero
 … | toZero rewrite toZero (m1 × m2 × 0) = toZero (m1 × m2)
-commut {m1} {m2} [ Z , S m3 ] = {!!}
-commut [ S m1 , Z ] = {!!}
-commut [ S m1 , S m2 ] = {!!}
+commut {m1} {m2} [ Z , S m3 ] rewrite mult-zero (m1 × m2) = ↯
+commut {m2} {m3} [ S m1 , Z ] rewrite mult-zero m1 | mult-zero (m2 × m3) | mult-zero (m2 × m3 × S m1) = ↯
+commut {m3} {m4} [ S m1 , S m2 ] = {!!}
