@@ -162,7 +162,7 @@ prods (x₁ ∷ x₂ ∷ xs) = x₁ × x₂ × prods xs
 _ : let xs = [ 3 , 2 ] in prods xs ≡ 6 
 _ = ↯
 
-base-case : (a : ℕ) (m : ℕ) → (i : idx 1) → mod a (prods [ m ]) ≡ mod ([ a ] #[ i ]) (prods [ m ])
+base-case : (a : ℕ) (m : ℕ) → (i : idx 1) → mod a (prods [ m ]) ≡ mod ([ a ] #[ i ]) ([ m ] #[ i ])
 base-case a m Z = ↯
 base-case a m (S ())
 
@@ -186,6 +186,9 @@ algo : ℕ → ℕ → (m1 : ℕ) → (m2 : ℕ) → coprime m1 m2 ≡ I → ℕ
 algo a1 a2 m1 m2 copP with BezID m1 m2 copP
 algo a1 a2 m1 m2 copP | [ n₁ , n₂ ] = (a1 × m2 × n₂) + (a2 × m1 × n₁)
 
+IC : (as ms : vec[ 2 ] ℕ ) → ℕ
+IC [ a1 , a2 ] [ m1 , m2 ] = {!!}
+
 CRT-1 :
   ∀ k
     (a : vec[ k ] ℕ)
@@ -198,10 +201,19 @@ CRT-1 :
   -- x is the solution to the system of congruences
   → ∃ x ⦂ ℕ ST
   -- x ≡ aᵢ (mod mᵢ)
-    (∀ (i : idx k) → mod x (prods m) ≡ mod (a #[ i ]) (prods m))
+    (∀ (i : idx k) → mod x (prods m) ≡ mod (a #[ i ]) (m #[ i ]))
 CRT-1 0 a m () copP
-CRT-1 1 [ a ] [ m ] ltP copP = ⟨∃ a , (base-case a m) ⟩
+CRT-1 1 [ a ] [ m ] ltP copP = ⟨∃ a , base-case a m ⟩
 CRT-1 (S (S k)) (a1 ∷ a2 ∷ as) (m1 ∷ m2 ∷ ms) ltP copP
-  with CRT-1 (S k) (algo a1 a2 m1 m2 (copP Z (S Z) (λ ())) ∷ as) (m1 × m2 ∷ ms) Z λ i j x → copP ({!Z!}) ({!!}) ({!!})
-CRT-1 (S (S k)) (a1 ∷ a2 ∷ as) (m1 ∷ m2 ∷ ms) ltP copP | ⟨∃ x , cong ⟩ = ⟨∃ x , (λ i → {!!}) ⟩
+  with CRT-1 (S k) (algo a1 a2 m1 m2 (copP Z (S Z) (λ ())) ∷ as) (m1 × m2 ∷ ms) Z {!!} 
+CRT-1 (S (S k)) (a1 ∷ a2 ∷ as) (m1 ∷ m2 ∷ ms) ltP copP | ⟨∃ x , cong ⟩ = ⟨∃ x , {!!} ⟩
 
+postulate
+  mult-zero : (x : ℕ) → x × Z ≡ Z
+
+commut : {m1 m2 : ℕ} (ms : vec[ 2 ] ℕ) → m1 × m2 × prods ms ≡ prods (m1 × m2 ∷ ms)
+commut {m1} {m2} [ Z , Z ] with mult-zero
+… | toZero rewrite toZero (m1 × m2 × 0) = toZero (m1 × m2)
+commut {m1} {m2} [ Z , S m3 ] = {!!}
+commut [ S m1 , Z ] = {!!}
+commut [ S m1 , S m2 ] = {!!}
