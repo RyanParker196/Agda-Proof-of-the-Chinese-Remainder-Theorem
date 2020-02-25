@@ -187,7 +187,7 @@ algo a1 a2 m1 m2 copP with BezID m1 m2 copP
 algo a1 a2 m1 m2 copP | [ n₁ , n₂ ] = (a1 × m2 × n₂) + (a2 × m1 × n₁)
 
 IC : (as ms : vec[ 2 ] ℕ ) → ℕ
-IC [ a1 , a2 ] [ m1 , m2 ] = {!!}
+IC [ a1 , a2 ] [ m1 , m2 ] = Z
 
 CRT-1 :
   ∀ k
