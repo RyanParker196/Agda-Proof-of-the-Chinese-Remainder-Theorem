@@ -1,5 +1,5 @@
 # Software Verification Final Project
 
-by,
-Ryan Parker
+## By
+Ryan Parker,
 Tyler Ehrlich
